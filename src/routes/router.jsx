@@ -6,6 +6,7 @@ import MainLayout from "../layout/MainLayout";
 import AuthPage from "../pages/AuthPage";
 import MentorsPage from "../pages/MentorsPage";
 import Mentor from "../components/Mentor/Mentor";
+import PrivateRoute from "../components/PrivateRoute/PrivateRoute";
 
 const router = createBrowserRouter([
   {
@@ -19,7 +20,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/about",
-        element: <About />,
+        element: (
+          <PrivateRoute>
+            <About />,
+          </PrivateRoute>
+        ),
       },
       {
         path: "/auth",
@@ -28,25 +33,29 @@ const router = createBrowserRouter([
       {
         path: "/all-mentors",
         loader: async () => {
-          const response = await fetch("https://jsonplaceholder.typicode.com/users"); 
-            if (!response.ok) {
-                throw new Error("Failed to fetch mentors");
-            }
-            return response.json();
+          const response = await fetch(
+            "https://jsonplaceholder.typicode.com/users"
+          );
+          if (!response.ok) {
+            throw new Error("Failed to fetch mentors");
+          }
+          return response.json();
         },
         element: <MentorsPage />,
       },
       {
         path: "/mentors/:id",
         loader: async ({ params }) => {
-          const response = await fetch(`https://jsonplaceholder.typicode.com/users/${params.id}`);
-            if (!response.ok) {
-                throw new Error("Failed to fetch mentor details");
-            }
-            return response.json();
+          const response = await fetch(
+            `https://jsonplaceholder.typicode.com/users/${params.id}`
+          );
+          if (!response.ok) {
+            throw new Error("Failed to fetch mentor details");
+          }
+          return response.json();
         },
-        element: <Mentor/>
-      }
+        element: <Mentor />,
+      },
     ],
   },
 ]);

@@ -21,20 +21,23 @@ const Navbar = () => {
           <Link to="/all-mentors" className="btn btn-ghost">
             All Mentors
           </Link>
-          <div className="bg-gray-500 my-auto px-3 py-1 rounded-full text-white">
-            <Suspense fallback={<div>Loading...</div>}>
-              {user?.displayName || user?.email}
-            </Suspense>
+
+          <div className="flex items-center gap-4">
+            {user ? (
+              <>
+                <span className="text-white font-medium bg-amber-400 py-1 px-3 rounded-xl">
+                  {user.displayName || user.email}
+                </span>
+                <button onClick={logoutUser} className="btn btn-sm btn-primary">
+                  Logout
+                </button>
+              </>
+            ) : (
+              <Link to="/auth" className="btn btn-sm btn-primary">
+                Login / Sign Up
+              </Link>
+            )}
           </div>
-          {!user ? (
-            <Link to="/auth" className="btn btn-primary">
-              Login / Sign Up
-            </Link>
-          ) : (
-            <Link to="/" onClick={logoutUser} className="btn btn-primary">
-              Logout
-            </Link>
-          )}
         </div>
       </nav>
     </div>
