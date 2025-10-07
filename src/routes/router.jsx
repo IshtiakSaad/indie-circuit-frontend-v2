@@ -26,7 +26,7 @@ const router = createBrowserRouter([
         element: <AuthPage />,
       },
       {
-        path: "/allmentors",
+        path: "/all-mentors",
         loader: async () => {
           const response = await fetch("https://jsonplaceholder.typicode.com/users"); 
             if (!response.ok) {

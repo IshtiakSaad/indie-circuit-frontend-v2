@@ -1,18 +1,63 @@
 import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
+import {
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
+import { auth } from "../Firebase/firebase.config";
+import { useNavigate } from "react-router-dom";
 
 const AuthPage = () => {
   const [activeTab, setActiveTab] = useState("login");
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const handleGoogleAuth = () => {
-    // 👉 Replace this with your Google Auth logic
-    console.log("Google Auth triggered");
+  // Handle Google Authentication
+
+  const handleGoogleAuth = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      setLoading(true);
+      await signInWithPopup(auth, provider);
+
+      navigate("/");
+    } catch (error) {
+      console.error("Google sign-in error:", error);
+    }
+
+    // console.log("Google Auth triggered");
   };
 
-  const handleEmailAuth = (e) => {
+  // Handle Email/Password Authentication
+
+  const handleEmailAuth = async (e) => {
     e.preventDefault();
-    // 👉 Replace this with your email/password logic
-    console.log("Email Auth triggered");
+    setLoading(true);
+    try {
+      if (activeTab === "signup") {
+        await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+      } else {
+        await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+      }
+
+      navigate("/");
+    } catch (error) {
+      console.error("Email/Password auth error:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -64,6 +109,7 @@ const AuthPage = () => {
               <label className="text-sm text-gray-300">Email</label>
               <input
                 type="email"
+                onChange={(e) => setEmail(e.target.value)}
                 required
                 className="w-full mt-1 p-3 bg-gray-800 rounded-xl border border-gray-700 focus:outline-none focus:border-blue-500"
               />
@@ -73,6 +119,7 @@ const AuthPage = () => {
               <input
                 type="password"
                 required
+                onChange={(e) => setPassword(e.target.value)}
                 className="w-full mt-1 p-3 bg-gray-800 rounded-xl border border-gray-700 focus:outline-none focus:border-blue-500"
               />
             </div>
@@ -98,6 +145,7 @@ const AuthPage = () => {
               <input
                 type="email"
                 required
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full mt-1 p-3 bg-gray-800 rounded-xl border border-gray-700 focus:outline-none focus:border-blue-500"
               />
             </div>
@@ -106,6 +154,7 @@ const AuthPage = () => {
               <input
                 type="password"
                 required
+                onChange={(e) => setPassword(e.target.value)}
                 className="w-full mt-1 p-3 bg-gray-800 rounded-xl border border-gray-700 focus:outline-none focus:border-blue-500"
               />
             </div>
