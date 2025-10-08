@@ -7,6 +7,7 @@ import AuthPage from "../pages/AuthPage";
 import MentorsPage from "../pages/MentorsPage";
 import Mentor from "../components/Mentor/Mentor";
 import PrivateRoute from "../components/PrivateRoute/PrivateRoute";
+import ProfilePage from "../pages/ProfilePage";
 
 const router = createBrowserRouter([
   {
@@ -56,6 +57,10 @@ const router = createBrowserRouter([
         },
         element: <Mentor />,
       },
+      {
+        path: '/userprofile',
+        element: <ProfilePage/>
+      }
     ],
   },
 ]);
