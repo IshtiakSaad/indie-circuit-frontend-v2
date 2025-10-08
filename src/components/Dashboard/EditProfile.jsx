@@ -1,9 +1,9 @@
 import React, { useContext, useState, useEffect } from "react";
-import AuthContext from "../context/AuthContext/AuthContext";
+import AuthContext from "../../context/AuthContext/AuthContext";
 
 const BACKEND = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
-const ProfilePage = () => {
+const EditProfile = () => {
   const { user } = useContext(AuthContext); // only Firebase info
   const [profile, setProfile] = useState(null); // full user from backend
   const [name, setName] = useState("");
@@ -74,7 +74,7 @@ const ProfilePage = () => {
   if (!profile) return <div className="p-4 text-red-500">No profile data found.</div>;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+    <div className="flex items-center justify-center bg-gray-50 p-4">
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-md bg-white p-6 rounded shadow"
@@ -139,4 +139,4 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;
+export default EditProfile;

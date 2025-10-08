@@ -63,6 +63,7 @@ const AuthProvider = ({ children }) => {
       if (currentUser) {
         await syncUserToBackend(currentUser);
       }
+
       setLoading(false);
     });
 

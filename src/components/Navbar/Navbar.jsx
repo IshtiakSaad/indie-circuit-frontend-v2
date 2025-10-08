@@ -21,13 +21,13 @@ const Navbar = () => {
           <Link to="/all-mentors" className="btn btn-ghost">
             All Mentors
           </Link>
+          <Link to="/dashboard" className="btn btn-ghost">
+            Dashboard
+          </Link>
 
           <div className="flex items-center gap-4">
             {user ? (
               <>
-                <span className="text-white font-medium bg-amber-400 py-1 px-3 rounded-xl">
-                  {user.displayName || user.email}
-                </span>
                 <button onClick={logoutUser} className="btn btn-sm btn-primary">
                   Logout
                 </button>

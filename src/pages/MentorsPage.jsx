@@ -1,71 +1,58 @@
-import React from "react";
-import { Link, useLoaderData } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
+const BACKEND = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
 const MentorsPage = () => {
-  const users = useLoaderData();
-//   console.log(users);
+  const [mentors, setMentors] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchMentors = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch(`${BACKEND}/users?role=mentor`);
+        if (!res.ok) {
+          const errData = await res.json();
+          setError(errData.error || "Failed to fetch mentors");
+        } else {
+          const data = await res.json();
+          setMentors(data);
+        }
+      } catch (err) {
+        console.error(err);
+        setError("Network error fetching mentors");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMentors();
+  }, []);
+
+
+
+  if (loading) return <div className="p-4">Loading mentors...</div>;
+  if (error) return <div className="p-4 text-red-500">{error}</div>;
 
   return (
-    <div className="text-center p-10">
-      <h1 className="text-4xl font-bold text-secondary">
-        Shob Boro Vaiya/Apu raaa!
-      </h1>
-
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto my-10">
-        {users.map((user) => (
+    <div className="min-h-screen p-6 bg-gray-50">
+      <h2 className="text-2xl font-semibold mb-6">All Mentors</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {mentors.map((mentor) => (
           <div
-            key={user.id}
-            className="bg-blue-900 backdrop-blur-lg rounded-2xl shadow-lg p-6 border border-white/20 hover:scale-[1.02] transition-transform duration-300"
+            key={mentor.id}
+            className="p-4 bg-white rounded shadow hover:shadow-md transition"
           >
-            <h2 className="text-2xl font-semibold mb-2 text-blue-300">
-              {user.name}
-            </h2>
-            <p className="text-sm text-gray-300 mb-1">
-              <span className="font-semibold text-gray-400">Username:</span>{" "}
-              {user.username}
-            </p>
-            <p className="text-sm text-gray-300 mb-3">
-              <span className="font-semibold text-gray-400">Email:</span>{" "}
-              {user.email}
-            </p>
-
-            <div className="mt-3 border-t border-white/10 pt-3 text-sm space-y-1">
-              <p>
-                <span className="font-semibold text-gray-400">Phone:</span>{" "}
-                {user.phone}
-              </p>
-              <p>
-                <span className="font-semibold text-gray-400">Website:</span>{" "}
-                <a
-                  href={`https://${user.website}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-blue-400 hover:underline"
-                >
-                  {user.website}
-                </a>
-              </p>
-            </div>
-
-            <div className="mt-4 border-t border-white/10 pt-3 text-sm">
-              <p className="font-semibold text-gray-400 mb-1">Address:</p>
-              <p>
-                {user.address.street}, {user.address.suite}, {user.address.city}{" "}
-                – {user.address.zipcode}
-              </p>
-            </div>
-
-            <div className="mt-4 border-t border-white/10 pt-3 text-sm">
-              <p className="font-semibold text-gray-400 mb-1">Company:</p>
-              <p>{user.company.name}</p>
-              <p className="text-gray-400 italic text-xs mt-1">
-                “{user.company.catchPhrase}”
-              </p>
-            </div>
+            <h3 className="text-lg font-bold">{mentor.name}</h3>
+            <p className="text-sm text-gray-600">Email: {mentor.email}</p>
+            <p className="text-sm text-gray-600">Field: {mentor.field}</p>
+            <p className="text-sm text-gray-600">Role: {mentor.role}</p>
 
             <Link
-              to={`/mentors/${user.id}`}
-              className="inline-block mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm" 
+              to={`/mentors/${mentor.id}`}
+              className="inline-block mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
             >
               View Profile
             </Link>
